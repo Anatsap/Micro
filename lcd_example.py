@@ -295,41 +295,40 @@ class LCD_1inch14(framebuf.FrameBuffer):
         self.blue  =   0xf800
         self.white =   0xffff
     
-    def character(self,xt,yt,sz,r,g,b):  # Single character sz is size: 1 or 2
-    cc = colour(r,g,b)
-    code = self * 5    # 5 bytes per character
-    for ii in range(5):
-        line = FONT[code + ii]
-        for yy in range(8):
-            if (line >> yy) & 0x1:
-                lcd.pixel(ii*sz+xt,yy*sz+yt,cc) 
-                if sz > 1:
-                    lcd.pixel(ii*sz+xt+1,yy*sz+yt,cc)
-                    lcd.pixel(ii*sz+xt,yy*sz+yt+1,cc)
-                    lcd.pixel(ii*sz+xt+1,yy*sz+yt+1,cc)
-                if sz == 3:
-                    lcd.pixel(ii*sz+xt,  yy*sz+yt+2,cc)
-                    lcd.pixel(ii*sz+xt+1,yy*sz+yt+2,cc)
-                    lcd.pixel(ii*sz+xt+2,yy*sz+yt+2,cc)
-                    lcd.pixel(ii*sz+xt+2,yy*sz+yt,cc)
-                    lcd.pixel(ii*sz+xt+2,yy*sz+yt+1,cc)
-                                    
-    def prnt_st(self,xx,yy,sz,r,g,b):  # Text string
+    def character(self,xt,yt,sz,cc,char):  # Single character sz is size: 1 or 2
+            code = char * 5    # 5 bytes per character
+            for ii in range(5):
+                line = FONT[code + ii]
+                for yy in range(8):
+                    if (line >> yy) & 0x1:
+                        self.pixel(ii*sz+xt,yy*sz+yt,cc) 
+                        if sz > 1:
+                            self.pixel(ii*sz+xt+1,yy*sz+yt,cc)
+                            self.pixel(ii*sz+xt,yy*sz+yt+1,cc)
+                            self.pixel(ii*sz+xt+1,yy*sz+yt+1,cc)
+                        if sz == 3:
+                            self.pixel(ii*sz+xt,  yy*sz+yt+2,cc)
+                            self.pixel(ii*sz+xt+1,yy*sz+yt+2,cc)
+                            self.pixel(ii*sz+xt+2,yy*sz+yt+2,cc)
+                            self.pixel(ii*sz+xt+2,yy*sz+yt,cc)
+                            self.pixel(ii*sz+xt+2,yy*sz+yt+1,cc)
+                                        
+    def prnt_st(self,str, xx,yy,sz,cc):  # Text string
         if sz == 1: move = 6
         if sz == 2: move = 11
         if sz == 3: move = 17 
-        for letter in(self):
-            self = ord(letter)
-            character(self,xx,yy,sz,r,g,b)
+        for letter in(str):
+            letter = ord(letter)
+            self.character(xx,yy,sz,cc, letter)
             xx = xx + move
 
-    def cntr_st(s,y,sz,r,g,b): # Centres text on line y
+    def cntr_st(self, s, y,sz, cc): # Centres text on line y
         if sz == 1: w = 6
         if sz == 2: w = 11
         if sz == 3: w = 17 
-        gap = int((width - len(s) * w)/2)
-        prnt_st(s,gap,y,sz,r,g,b)
-        def write_cmd(self, cmd):
+        gap = int((self.width - len(s) * w)/2)
+        self.prnt_st(s,gap,y,sz,cc)
+    def write_cmd(self, cmd):
             self.cs(1)
             self.dc(0)
             self.cs(0)
@@ -475,6 +474,7 @@ class LCD_1inch14(framebuf.FrameBuffer):
         self.swap()
         self.cs(1)
   
+
 if __name__=='__main__':
     from bmp_reader import BMPReader
     import os

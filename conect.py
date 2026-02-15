@@ -7,6 +7,7 @@ print(ser.name)
 str = b'CPU:' 
 str2 = b'count:' 
 str3 = b'temp:'
+str4 = b'frequency:'
 
 
 while True:
@@ -14,6 +15,7 @@ while True:
     load = psutil.cpu_percent(interval=1)
     count = psutil.cpu_count()
     temp = psutil.sensors_temperatures()
+    freq = psutil.cpu_freq()
     
 
 
@@ -23,12 +25,16 @@ while True:
     ser.write(str2 + write_count)
 
 
-    temp = psutil.sensors_temperatures()
     if 'coretemp' in temp:
         for entry in temp['coretemp']:
             write_temp = ('%s C\n' % entry.current).encode()
 
     ser.write(str3 + write_temp)
+
+
+    write_freq = ('%s\n' % round(freq[0], 3)).encode()
+    ser.write(str4 + write_freq)
+
 
       
 ser.close()  

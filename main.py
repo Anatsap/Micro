@@ -11,8 +11,9 @@ while True:
     for  _ in p.ipoll():
             read = sys.stdin.readline()
             if "CPU" in read.upper():
-                d.fill_rect(40, 70, 200, 20, 0)
-                d.text(read.strip(), 40, 70, 0xFFFF)
+                d.fill_rect(40, 70, 400, 40, 0)
+                # d.text(read.strip(), 40, 70, 0xFFFF)
+                d.prnt_st(read.strip(), 40, 70, 3, 0xFFFF)
                 d.show()
             elif "count" in read.lower():
                 d.fill_rect(40, 90, 200, 20, 0)
@@ -31,7 +32,12 @@ while True:
                     d.fill_rect(40, 110, 200, 20, 0)
                     d.text(read.strip(), 40, 110, 0xf800)
                     d.show()
-                     
+            elif "frequency" in read.lower():
+                 val = read.split(":")
+                 cur = val[1]
+                 d.fill_rect(40, 50, 200, 20, 0)
+                 d.text(read.strip(), 40, 50, 0xFFFF)
+                 d.show()
                      
 
 
