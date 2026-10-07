@@ -18,10 +18,10 @@ while True:
     freq = psutil.cpu_freq()
     
 
-
+    ser.write(f"CPU: {load}\n".encode())
     write_cpu  = ('%s %%\n' % load ).encode()
     write_count  = ('%s\n' % count ).encode()
-    ser.write(str + write_cpu)
+    # ser.write(str + write_cpu)
     ser.write(str2 + write_count)
 
 
